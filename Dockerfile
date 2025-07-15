@@ -2,7 +2,7 @@
 
 
 ARG VARIANT="22"
-FROM mcr.microsoft.com/devcontainers/javascript-node:${VARIANT} as base
+FROM mcr.microsoft.com/devcontainers/javascript-node:${VARIANT} AS base
 
 
 # Install some generally useful tools
@@ -13,6 +13,7 @@ RUN apt-get update \
     ca-certificates \
     sudo \
     adduser \
+    fzf \
     unzip
 
 # Ensure keyrings dir is there, for apt-based Docker and Node.js installs
@@ -26,7 +27,15 @@ RUN update-ca-certificates
 
 
 # ---------------------------------------------------------------------
-FROM base as extra
+FROM base AS extra
+ARG SETUPDIR=/tmp/setup
+ARG DEST=/usr/local/bin
+
+RUN mkdir $SETUPDIR && chmod 777 $SETUPDIR
+
+
+RUN cd $SETUPDIR
+
 
 # Jq
 ARG JQVER=1.7
@@ -39,12 +48,12 @@ RUN curl \
 
 # Neovim
 ARG NEOVIMVER=0.9.5
-RUN curl -L https://github.com/neovim/neovim/releases/download/v${NEOVIMVER}/nvim-linux64.tar.gz \
+RUN curl -sL https://github.com/neovim/neovim/releases/download/v${NEOVIMVER}/nvim-linux64.tar.gz \
   | tar xzf - -C /usr --strip-components 1
 
 
 # ---------------------------------------------------------------------
-FROM extra as npminstalls
+FROM extra AS npminstalls
 
 # CAP installs
 RUN \
@@ -66,17 +75,21 @@ RUN \
     yarn 
 
 # ---------------------------------------------------------------------
-FROM npminstalls as coreconfig
+FROM npminstalls AS coreconfig
 
+ARG USERHOME=/home/node
 
 # Basic LazyVim config & setup
 RUN \
-    git clone https://github.com/slash-h/dotfiles.git /home/node \           
-    ln -s /home/node/dotfiles/nvim/ /home/node/.config/nvim                  #Symlink to NVIM config
+    git clone https://github.com/slash-h/lazyvim.git $USERHOME/lazyvim \
+    && chown -R node:node $USERHOME/lazyvim
+
+RUN \          
+    ln -s $USERHOME/lazyvim/config/nvim/ $USERHOME/.config/nvim                  #Symlink to NVIM config
 
 
 # ---------------------------------------------------------------------
-FROM coreconfig as finalsetup
+FROM coreconfig AS finalsetup
 
 RUN cat <<EOBASHRC >> /home/node/.bashrc
 # vi mode everywhere
