@@ -47,8 +47,8 @@ RUN curl \
   && chmod +x $DEST/jq
 
 # Neovim
-ARG NEOVIMVER=0.9.5
-RUN curl -sL https://github.com/neovim/neovim/releases/download/v${NEOVIMVER}/nvim-linux64.tar.gz \
+ARG NEOVIMVER=0.11.2
+RUN curl -sL https://github.com/neovim/neovim/releases/download/v${NEOVIMVER}/nvim-linux-x86_64.tar.gz \
   | tar xzf - -C /usr --strip-components 1
 
 
