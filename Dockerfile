@@ -14,6 +14,8 @@ RUN apt-get update \
     sudo \
     adduser \
     fzf \
+    fd-find \
+    ripgrep \ 
     unzip
 
 # Ensure keyrings dir is there, for apt-based Docker and Node.js installs
