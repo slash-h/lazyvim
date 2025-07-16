@@ -94,7 +94,7 @@ RUN \
     git clone https://github.com/slash-h/lazyvim.git $SETUPDIR/lazyvim \
     && cp -a $SETUPDIR/lazyvim/config/nvim/ $USERHOME/.config/nvim
 
-
+RUN sudo rm -rf $SETUPDIR/
 
 # ---------------------------------------------------------------------
 FROM coreconfig AS finalsetup
