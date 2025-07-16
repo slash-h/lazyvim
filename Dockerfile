@@ -47,8 +47,8 @@ RUN curl \
   && chmod +x $DEST/jq
 
 # Neovim
-ARG NEOVIMVER=0.9.5
-RUN curl -sL https://github.com/neovim/neovim/releases/download/v${NEOVIMVER}/nvim-linux64.tar.gz \
+ARG NEOVIMVER=0.11.2
+RUN curl -sL https://github.com/neovim/neovim/releases/download/v${NEOVIMVER}/nvim-linux-x86_64.tar.gz \
   | tar xzf - -C /usr --strip-components 1
 
 
@@ -77,15 +77,23 @@ RUN \
 # ---------------------------------------------------------------------
 FROM npminstalls AS coreconfig
 
+USER node
 ARG USERHOME=/home/node
 
 # Basic LazyVim config & setup
-RUN \
-    git clone https://github.com/slash-h/lazyvim.git $USERHOME/lazyvim \
-    && chown -R node:node $USERHOME/lazyvim
+#RUN \
+#    git clone https://github.com/slash-h/lazyvim.git $USERHOME/lazyvim \
+#   && chown -R node:node $USERHOME/lazyvim
 
-RUN \          
-    ln -s $USERHOME/lazyvim/config/nvim/ $USERHOME/.config/nvim                  #Symlink to NVIM config
+#RUN \          
+#   ln -s $USERHOME/lazyvim/config/nvim/ $USERHOME/.config/nvim                  #Symlink to NVIM config
+
+
+# Basic LazyVim config & setup
+RUN \
+    git clone https://github.com/slash-h/lazyvim.git $SETUPDIR/lazyvim \
+    && cp -a $SETUPDIR/lazyvim/config/nvim/ $USERHOME/.config/nvim
+
 
 
 # ---------------------------------------------------------------------
@@ -112,5 +120,6 @@ EOINPUTRC
 
 
 # Ready!
-USER node
 WORKDIR /home/node
+
+CMD ["bash"]

@@ -1,3 +1,7 @@
+-- currently we don't want Co-pilot since Windsurf is being used, so don't actually load anything here and return an empty spec
+-- stylua: ignore
+if true then return {} end
+
 return {
   "zbirenbaum/copilot.lua",
   opts = {

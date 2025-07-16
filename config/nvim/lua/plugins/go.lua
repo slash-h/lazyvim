@@ -1,3 +1,7 @@
+-- currently we don't want GO, so don't actually load anything here and return an empty spec
+-- stylua: ignore
+if true then return {} end
+
 return {
   {
     "neovim/nvim-lspconfig",
