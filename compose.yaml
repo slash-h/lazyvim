@@ -1,12 +1,12 @@
 version: '3.7'
 services:
-  lazyvim:
+  nvim:
     environment:
       - bootstrap.memory_lock=true
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: nvim
+    container_name: pde 
     entrypoint: /bin/bash
     tty: true
     volumes:

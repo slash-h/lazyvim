@@ -35,9 +35,7 @@ ARG DEST=/usr/local/bin
 
 RUN mkdir $SETUPDIR && chmod 777 $SETUPDIR
 
-
 RUN cd $SETUPDIR
-
 
 # Jq
 ARG JQVER=1.7
@@ -58,7 +56,6 @@ RUN cd $SETUPDIR \
   && curl -fsSL "https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz" \
   | tar -xzf - \
   && cd "tmux-$TMUXVER" && ./configure && make && make install
-
 
 
 # ---------------------------------------------------------------------
@@ -90,19 +87,15 @@ USER node
 ARG USERHOME=/home/node
 
 # Basic LazyVim config & setup
-#RUN \
-#    git clone https://github.com/slash-h/lazyvim.git $USERHOME/lazyvim \
+RUN \
+    git clone https://github.com/slash-h/dotfiles.git $USERHOME/dotfiles 
 #   && chown -R node:node $USERHOME/lazyvim
 
-#RUN \          
-#   ln -s $USERHOME/lazyvim/config/nvim/ $USERHOME/.config/nvim                  #Symlink to NVIM config
+#Symlink to NVIM config
+RUN ln -s $USERHOME/dotfiles/config/nvim/ $USERHOME/.config/nvim                 
+#Symlink to TMUX config
+RUN ln -s $USERHOME/dotfiles/config/tmux/tmux.conf $USERHOME/.tmux.conf          
 
-
-# Basic LazyVim config & setup
-RUN \
-    git clone https://github.com/slash-h/lazyvim.git $SETUPDIR/lazyvim    \
-    && cp -a $SETUPDIR/lazyvim/config/nvim/ $USERHOME/.config/nvim.        \
-    && cp -a $SETUPDIR/lazyvim/config/tmux/tmux.conf $USERHOME/.tmux.conf
 
 # Install TMUX Package Manager for supporting TMUX plugins
 RUN git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
