@@ -100,7 +100,7 @@ ARG USERHOME=/home/node
 
 # Basic LazyVim config & setup
 RUN \
-    git clone https://github.com/slash-h/lazyvim.git $SETUPDIR/lazyvim.    \
+    git clone https://github.com/slash-h/lazyvim.git $SETUPDIR/lazyvim    \
     && cp -a $SETUPDIR/lazyvim/config/nvim/ $USERHOME/.config/nvim.        \
     && cp -a $SETUPDIR/lazyvim/config/tmux/tmux.conf $USERHOME/.tmux.conf
 
