@@ -53,6 +53,13 @@ ARG NEOVIMVER=0.11.2
 RUN curl -sL https://github.com/neovim/neovim/releases/download/v${NEOVIMVER}/nvim-linux-x86_64.tar.gz \
   | tar xzf - -C /usr --strip-components 1
 
+ARG TMUXVER=3.3a
+RUN cd $SETUPDIR \
+  && curl -fsSL "https://github.com/tmux/tmux/releases/download/$TMUXVER/tmux-$TMUXVER.tar.gz" \
+  | tar -xzf - \
+  && cd "tmux-$TMUXVER" && ./configure && make && make install
+
+
 
 # ---------------------------------------------------------------------
 FROM extra AS npminstalls
@@ -93,13 +100,22 @@ ARG USERHOME=/home/node
 
 # Basic LazyVim config & setup
 RUN \
-    git clone https://github.com/slash-h/lazyvim.git $SETUPDIR/lazyvim \
-    && cp -a $SETUPDIR/lazyvim/config/nvim/ $USERHOME/.config/nvim
+    git clone https://github.com/slash-h/lazyvim.git $SETUPDIR/lazyvim.    \
+    && cp -a $SETUPDIR/lazyvim/config/nvim/ $USERHOME/.config/nvim.        \
+    && cp -a $SETUPDIR/lazyvim/config/tmux/tmux.conf $USERHOME/.tmux.conf
+
+# Install TMUX Package Manager for supporting TMUX plugins
+RUN git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+
 
 RUN sudo rm -rf $SETUPDIR/
 
 # ---------------------------------------------------------------------
 FROM coreconfig AS finalsetup
+
+#Set Terminal environment to use xterm-256 color scheme (this is required by tmux for correct rendering of symbols)
+ENV TERM xterm-256color
+ENV LANG us_EN.UTF-8
 
 RUN cat <<EOBASHRC >> /home/node/.bashrc
 # vi mode everywhere
