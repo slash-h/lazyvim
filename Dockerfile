@@ -123,7 +123,12 @@ alias node="env NODE_NO_READLINE=1 rlwrap node"
 EOBASHRC
 
 # nicer prompt
+RUN echo '#Uncomment below lines to overwrite PS1 with a fancy chevrons prompt' >> /home/node/.bashrc
+RUN echo '#source'  ${USERHOME}'/dotfiles/config/bash.d/functions.sh' >> /home/node/.bashrc
+RUN echo "#PS1='\$(cecho \"\w\" cyan) \$(git_info \"on \") \$(chevrons) ' "  >> /home/node/.bashrc
+RUN echo '  ' >> /home/node/.bashrc
 RUN echo 'export PS1=${PS1/\$ /\\\\n$ }' >> /home/node/.bashrc
+
 
 RUN cat <<EOINPUTRC >> /home/node/.inputrc
 set editing-mode vi
