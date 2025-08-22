@@ -124,7 +124,7 @@ EOBASHRC
 
 # nicer prompt
 RUN echo '#Uncomment below lines to overwrite PS1 with a fancy chevrons prompt' >> /home/node/.bashrc
-RUN echo '#source'  ${USERHOME}'/dotfiles/config/bash.d/functions.sh' >> /home/node/.bashrc
+RUN echo '#source'  ${USERHOME}'/dotfiles/bashrc.d/70-functions.sh' >> /home/node/.bashrc
 RUN echo "#PS1='\$(cecho \"\w\" cyan) \$(git_info \"on \") \$(chevrons) ' "  >> /home/node/.bashrc
 RUN echo '  ' >> /home/node/.bashrc
 RUN echo 'export PS1=${PS1/\$ /\\\\n$ }' >> /home/node/.bashrc
@@ -138,4 +138,5 @@ EOINPUTRC
 # Ready!
 WORKDIR /home/node
 
-CMD ["bash"]
+# Start with TMUX right away!
+CMD ["tmux", "-u", "new", "-s", "main"]
